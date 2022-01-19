@@ -1,0 +1,60 @@
+@page
+@model WebApp.Pages.GameOptions.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GameOption[0].BoardSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameOption[0].MaxShipSize)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameOption[0].ShipAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameOption[0].TouchState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GameOption[0].Combo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.GameOption) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BoardSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxShipSize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TouchState)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Combo)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.GameOptionId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.GameOptionId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.GameOptionId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

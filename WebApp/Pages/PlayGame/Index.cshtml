@@ -1,0 +1,225 @@
+@page
+@using GameBrain
+@using Domain
+@model WebApp.Pages.PlayGame.Index
+
+@functions
+{
+    public  string CellString(CellState cellState)
+    {
+        switch (cellState)
+        {
+            case CellState.Empty:
+                return " ";
+            case CellState.Bomb:
+                return "💣";
+            case CellState.Miss:
+                return "🌊";
+            case CellState.Ship:
+                return Model.CurrentGameState is Index.GameState.Started or Index.GameState.Replay ? " " : "🚢";
+        }
+
+        return "-";
+    }
+    
+}
+
+
+@if (Model.CurrentGameState == Index.GameState.NotStarted)
+{
+    <form method="post">
+        <div class="form-group">
+            <h2>Select whom against you will play</h2>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="VersusRadio" id="example1" value="Player" checked>
+                <label class="form-check-label" for="example1">
+                    Versus Player
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="VersusRadio" id="example2" value="AI" checked>
+                <label class="form-check-label" for="example2">
+                    Versus AI
+                </label>
+            </div>
+        </div>
+
+        <h2>Select game options</h2>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Selected
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameOptions[0].BoardSize)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameOptions[0].MaxShipSize)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameOptions[0].ShipAmount)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameOptions[0].TouchState)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GameOptions[0].Combo)
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.GameOptions)
+            {
+                <tr>
+                    <td>
+                        <input class="form-check-input" type="radio" name="selectOptions" id="example3" value="@Model.GameOptions.IndexOf(item)" checked>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BoardSize)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaxShipSize)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShipAmount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TouchState)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Combo)
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="Player1Random" />
+          <label class="form-check-label" for="inlineCheckbox1">Player 1, ships random placing</label>
+        </div>
+        
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="Player2Random" />
+          <label class="form-check-label" for="inlineCheckbox2">Player 2, ships random placing</label>
+        </div>
+        
+        
+        
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+
+    </form>
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+}
+
+else 
+{
+    @if (Model.CurrentGameState == Index.GameState.PlacingShips)
+    {
+        <div class="text-center">
+            <h2>BATTLESHIP</h2>
+            <img src="~/iu.jpeg" class="img-fluid" alt="Responsive image">
+            <p>Click on on checbox below if you want to place ship horizontally</p>
+            <input type="checkbox" class="orientation">
+            <p>Horizontally?</p>
+        </div>
+    }
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                @if (Model.BattleShip!.VersusAI)
+                    {
+                        <p class="font-weight-bold">AI BOARD</p>
+                    }
+                 else
+                 {
+                     <p class="font-weight-bold">PLAYER 2 BOARD</p>
+                 } 
+                <table class="table  table-bordered table-hover table-primary">
+                    @for (var y = 0; y < Model.BattleShip!.Config.BoardSize; y++)
+                    {
+                        <tr>
+                            @for (var x = 0; x < Model.BattleShip!.Config.BoardSize; x++)
+                            {
+
+                                @if ((!Model.BattleShip!.NextMoveByPlayer1 && Model.CurrentGameState == Index.GameState.PlacingShips)
+                                     || (Model.BattleShip!.NextMoveByPlayer1 && Model.CurrentGameState == Index.GameState.Started))
+                                {
+
+                                    <td class="text-center"  onclick="boardClicked(@x, @y)" style="cursor: pointer; width: 50px; height: 50px">
+                                        @CellString(Model.BattleShip.GetBoard(2)[x, y])
+                                    </td>
+                                }
+                                else
+                                {
+
+                                    <td class="text-center" style="width: 50px; height: 50px">
+                                        @CellString(Model.BattleShip.GetBoard(2)[x, y])
+                                    </td>
+                                }
+
+                            }
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="table-responsive col-md-6">
+                <p class="font-weight-bold">PLAYER 1 BOARD</p>
+                <table class="table table-bordered table-hover table-primary">
+                    @for (var y = 0; y < Model.BattleShip!.Config.BoardSize; y++)
+                    {
+                        <tr>
+                            @for (var x = 0; x < Model.BattleShip!.Config.BoardSize; x++)
+                            {
+                                @if ((Model.BattleShip!.NextMoveByPlayer1 && Model.CurrentGameState == Index.GameState.PlacingShips)
+                                || (!Model.BattleShip!.NextMoveByPlayer1 && Model.CurrentGameState == Index.GameState.Started))
+                                {
+                                    <td class="text-center" onclick="boardClicked(@x, @y)" style="cursor: pointer; width: 50px; height: 50px">
+                                        @CellString(Model.BattleShip.GetBoard(1)[x, y])
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center" style="width: 50px; height: 50px">
+                                        @CellString(Model.BattleShip.GetBoard(1)[x, y])
+                                    </td>
+                                }
+                            }
+
+                        </tr>
+                    }
+                </table>
+
+            </div>
+
+        </div>
+
+        <div>
+            @if (Model.CurrentGameState != Index.GameState.Replay)
+            {
+                <Form method="post">
+                    <div class="text-center">
+                        <input type="text" name="saveName" placeholder="Enter Save Name Here ">
+                        <input type="submit" name="SaveGame" value="Save This Game" class="btn btn-primary"/>
+                    </div>
+                </Form>
+            }
+            else
+            {
+                <a href="/PlayGame/?replayFunction=forward"> <button class="btn btn-primary">Forward</button> </a>
+                <a href="/PlayGame/?replayFunction=backward"> <button class="btn btn-primary">Backward</button> </a>
+                <a href="/PlayGame/?replayFunction=continue"> <button class="btn btn-primary">Continue</button> </a>
+            }
+        </div>
+    
+    @if (Model.CurrentGameState == Index.GameState.Over)
+    {
+        <div class="text-center">
+            <h1>Winner: @Model.Winner</h1>
+        </div>
+    }
+}

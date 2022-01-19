@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DAL\DAL.csproj" />
+      <ProjectReference Include="..\GameBrain\GameBrain.csproj" />
+        
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Players\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Players\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameOptions\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameOptions\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameOptions\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameOptions\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\GameOptions\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\BattleshipBoards\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\BattleshipBoards\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\BattleshipBoards\Details.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\BattleshipBoards\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\BattleshipBoards\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Pages\Players\Create.cshtml" />
+      <UpToDateCheckInput Remove="Pages\Players\Delete.cshtml" />
+      <UpToDateCheckInput Remove="Pages\Players\Details.cshtml" />
+      <UpToDateCheckInput Remove="Pages\Players\Edit.cshtml" />
+      <UpToDateCheckInput Remove="Pages\Players\Index.cshtml" />
+    </ItemGroup>
+
+</Project>
